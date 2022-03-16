@@ -1,0 +1,19 @@
+<table class="table" style="color: white;">
+    <thead>
+      <tr>
+        <th scope="col">no</th>
+        <th scope="col">amount</th>
+        <th scope="col">type</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- array name -->
+      <tr *ngFor="let trans of transactions">   
+      
+        <th scope="row">{{trans.no}}</th>
+        <td>{{trans.amount}}</td>
+        <td>{{trans.type}}</td>
+        
+      </tr>
+    </tbody>
+  </table>
