@@ -9,13 +9,13 @@ import { Component, OnInit } from '@angular/core';
     trigger('openClose',[
       state('open',style(
         {
-          height:'500px',
-          backgroundColor:'green'
+          height:'50px',
+          backgroundColor:'red'
         }
       )),
       state('close',style(
         {
-          height:'250px',
+          height:'40px',
           backgroundColor:'black'
         }
       )),

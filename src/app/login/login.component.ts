@@ -97,11 +97,27 @@ login()
 
 if(this.loginForm.valid){
 
-const result=this.ds.login(acno,pwd)
-if(result){
-  alert("login successful")
-  this.rout.navigateByUrl("dashboard")
+this.ds.login(acno,pwd)
+//asynchronous call-login 
+.subscribe((result:any)=>{
+  if(result){
+    localStorage.setItem('currentAcno',JSON.stringify(result.currentAcno))
+    localStorage.setItem('currentUname',JSON.stringify(result.currentUname))
+    localStorage.setItem('token',JSON.stringify(result.token))    //serverl ula loginle data local storagel store akunu
+
+
+    alert(result.message)
+    this.rout.navigateByUrl("dashboard")
+  }
+},
+(result)=>{
+  alert(result.error.message)
 }
+)
+// if(result){
+//   alert("login successful")
+//   this.rout.navigateByUrl("dashboard")
+// }
 }
 else{
   alert("invalid form")

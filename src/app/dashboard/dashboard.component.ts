@@ -43,7 +43,10 @@ export class DashboardComponent implements OnInit {
 
 
   constructor(private ds: DataService, private fb: FormBuilder,private router:Router) {
-    this.user=this.ds.currentUname
+    if(localStorage.getItem('currentUname')){
+      this.user=JSON.parse(localStorage.getItem('currentUname')||'')
+    }
+  
    
    this.lDate=new Date()
 }
@@ -63,18 +66,28 @@ export class DashboardComponent implements OnInit {
 
     //calling deposit fun n of database
     if (this.depositForm.valid) {
+      //calling asynchonous
+       this.ds.deposit(acno, pwd, amount)
 
-      const result = this.ds.deposit(acno, pwd, amount)
-      if (result) {
+.subscribe((result:any)=>{
+  if (result) {
 
-        alert(amount + "successfully deposited....and new balance is" + result)
-      }
-    }
-    else {
-      alert("invalid form")
-    }
+    alert( result.message)
   }
+},
+(result)=>{
+  
+    alert(result.error.message)
+  })
+}
+else {
+  alert("invalid form")
+}
 
+  }
+ 
+
+     
 
 
   withdraw() {
@@ -84,22 +97,36 @@ export class DashboardComponent implements OnInit {
 
     if (this.withdrawForm.valid) {
 
-      const result = this.ds.withdraw(acno1, pwd1, amount)
+      this.ds.withdraw(acno1, pwd1, amount)
+
+      .subscribe((result:any)=>{
+
       if (result) {
+        
+        alert(result.message)
 
-        alert(amount + "successfully debited....and new balance is" + result)
+        // alert(amount + "successfully debited....and new balance is" + result)
       }
-    }
-    else {
-      alert("invalid form")
+    },
+    (result)=>{
+  
+      alert(result.error.message)
+    })
+  }
+  else {
+    alert("invalid form")
+  }
+  
     }
 
-    //alert("withrdrw")
-  }
+
+  
 
   logout(){
     localStorage.removeItem("currentAcno")
     localStorage.removeItem("currentUname")
+    localStorage.removeItem("token")
+
     this.router.navigateByUrl("")
 
   }
@@ -112,8 +139,29 @@ export class DashboardComponent implements OnInit {
   }
 
   delete(event:any){
-    alert("delete account"+event)
-this.router.navigateByUrl("")
+    this.ds.delete(event)
+    .subscribe((result:any)=>{
+      if(result){
+
+      alert(result.message)
+
+      localStorage.removeItem("currentAcno")
+      localStorage.removeItem("currentUname")
+      localStorage.removeItem("token")
+
+
+      this.router.navigateByUrl("")
+
+      
+    }
+    },
+    (result)=>{
+      alert(result.error.message)
+    }
+    )
+
+//     alert("delete account"+event)
+// this.router.navigateByUrl("")
 
 
   }
